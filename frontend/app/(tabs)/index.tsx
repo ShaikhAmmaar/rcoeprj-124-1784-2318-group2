@@ -95,11 +95,6 @@ export default function HomeScreen() {
       <View style={styles.cardContent}>
         <View style={styles.cardHeader}>
           <Text style={styles.cardRent}>₹{item.rent}/month</Text>
-          {!isOwner && item.compatibility !== undefined && (
-            <View style={styles.compatibilityBadge}>
-              <Text style={styles.compatibilityText}>{item.compatibility}% Match</Text>
-            </View>
-          )}
         </View>
 
         <View style={styles.cardLocation}>
@@ -275,17 +270,6 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: 'bold',
     color: Colors.primary,
-  },
-  compatibilityBadge: {
-    backgroundColor: Colors.success,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 12,
-  },
-  compatibilityText: {
-    color: Colors.secondary,
-    fontSize: 12,
-    fontWeight: '600',
   },
   cardLocation: {
     flexDirection: 'row',
