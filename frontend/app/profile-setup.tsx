@@ -9,10 +9,13 @@ import {
   SafeAreaView,
   Switch,
   Alert,
+  Image,
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuth } from '../contexts/AuthContext';
 import { Colors } from '../constants/colors';
+import { Ionicons } from '@expo/vector-icons';
+import * as ImagePicker from 'expo-image-picker';
 import axios from 'axios';
 
 const BACKEND_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
@@ -23,6 +26,7 @@ export default function ProfileSetupScreen() {
 
   const [phoneNumber, setPhoneNumber] = useState('');
   const [area, setArea] = useState('');
+  const [images, setImages] = useState<string[]>([]);
   const [party, setParty] = useState(false);
   const [smoking, setSmoking] = useState(false);
   const [alcohol, setAlcohol] = useState(false);
@@ -33,6 +37,36 @@ export default function ProfileSetupScreen() {
   const [loading, setLoading] = useState(false);
 
   const isSeeker = user?.userType === 'seeker';
+
+  const pickImage = async () => {
+    if (images.length >= 5) {
+      Alert.alert('Limit Reached', 'You can upload maximum 5 images');
+      return;
+    }
+
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    
+    if (status !== 'granted') {
+      Alert.alert('Permission Denied', 'Please allow access to your photos');
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
+      allowsMultipleSelection: false,
+      quality: 0.7,
+      base64: true,
+    });
+
+    if (!result.canceled && result.assets[0].base64) {
+      const base64Image = `data:image/jpeg;base64,${result.assets[0].base64}`;
+      setImages([...images, base64Image]);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async () => {
     if (!phoneNumber) {
@@ -45,6 +79,11 @@ export default function ProfileSetupScreen() {
       return;
     }
 
+    if (isSeeker && images.length === 0) {
+      Alert.alert('Error', 'Please upload at least one photo');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await axios.put(
@@ -53,6 +92,7 @@ export default function ProfileSetupScreen() {
           userType: user?.userType,
           phoneNumber,
           area: isSeeker ? area : '',
+          images: isSeeker ? images : [],
           party,
           smoking,
           alcohol,
@@ -84,6 +124,34 @@ export default function ProfileSetupScreen() {
         <Text style={styles.subtitle}>Help us find your perfect match</Text>
 
         <View style={styles.form}>
+          {isSeeker && (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Your Photos *</Text>
+              <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+                <View style={styles.imagesContainer}>
+                  {images.map((image, index) => (
+                    <View key={index} style={styles.imageWrapper}>
+                      <Image source={{ uri: image }} style={styles.imagePreview} />
+                      <TouchableOpacity
+                        style={styles.removeButton}
+                        onPress={() => removeImage(index)}
+                      >
+                        <Ionicons name="close-circle" size={24} color={Colors.error} />
+                      </TouchableOpacity>
+                    </View>
+                  ))}
+                  {images.length < 5 && (
+                    <TouchableOpacity style={styles.addImageButton} onPress={pickImage}>
+                      <Ionicons name="add" size={32} color={Colors.primary} />
+                      <Text style={styles.addImageText}>Add Photo</Text>
+                    </TouchableOpacity>
+                  )}
+                </View>
+              </ScrollView>
+              <Text style={styles.hint}>{images.length}/5 images</Text>
+            </View>
+          )}
+
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Contact Information</Text>
             
@@ -195,7 +263,7 @@ export default function ProfileSetupScreen() {
                     {option.charAt(0).toUpperCase() + option.slice(1)}
                   </Text>
                 </TouchableOpacity>
-              ))}\
+              ))}
             </View>
           </View>
 
@@ -264,6 +332,46 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     color: Colors.textPrimary,
     marginBottom: 16,
+  },
+  imagesContainer: {
+    flexDirection: 'row',
+    gap: 12,
+  },
+  imageWrapper: {
+    position: 'relative',
+  },
+  imagePreview: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+  },
+  removeButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    backgroundColor: Colors.secondary,
+    borderRadius: 12,
+  },
+  addImageButton: {
+    width: 120,
+    height: 120,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    borderStyle: 'dashed',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.secondary,
+  },
+  addImageText: {
+    color: Colors.primary,
+    fontSize: 12,
+    marginTop: 4,
+  },
+  hint: {
+    fontSize: 12,
+    color: Colors.textSecondary,
+    marginTop: 8,
   },
   input: {
     backgroundColor: Colors.background,

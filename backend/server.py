@@ -46,6 +46,7 @@ class UserProfile(BaseModel):
     userType: str  # "owner" or "seeker"
     phoneNumber: str
     area: str  # Area/location where user lives
+    images: List[str] = []  # Profile images for seekers
     party: bool = False
     smoking: bool = False
     alcohol: bool = False
@@ -61,6 +62,7 @@ class UserResponse(BaseModel):
     userType: Optional[str] = None
     phoneNumber: Optional[str] = ""
     area: Optional[str] = ""
+    images: Optional[List[str]] = []
     party: Optional[bool] = False
     smoking: Optional[bool] = False
     alcohol: Optional[bool] = False
@@ -179,6 +181,7 @@ async def register(user_data: UserRegister):
         "userType": None,
         "phoneNumber": "",
         "area": "",
+        "images": [],
         "party": False,
         "smoking": False,
         "alcohol": False,
@@ -226,6 +229,7 @@ async def login(user_data: UserLogin):
             "userType": user.get("userType"),
             "phoneNumber": user.get("phoneNumber", ""),
             "area": user.get("area", ""),
+            "images": user.get("images", []),
             "party": user.get("party", False),
             "smoking": user.get("smoking", False),
             "alcohol": user.get("alcohol", False),
@@ -249,6 +253,7 @@ async def get_me(credentials: HTTPAuthorizationCredentials = Depends(security)):
         "userType": user.get("userType"),
         "phoneNumber": user.get("phoneNumber", ""),
         "area": user.get("area", ""),
+        "images": user.get("images", []),
         "party": user.get("party", False),
         "smoking": user.get("smoking", False),
         "alcohol": user.get("alcohol", False),
@@ -283,6 +288,7 @@ async def update_profile(
         "userType": updated_user.get("userType"),
         "phoneNumber": updated_user.get("phoneNumber", ""),
         "area": updated_user.get("area", ""),
+        "images": updated_user.get("images", []),
         "party": updated_user.get("party", False),
         "smoking": updated_user.get("smoking", False),
         "alcohol": updated_user.get("alcohol", False),
@@ -322,6 +328,7 @@ async def get_seekers(
             "userType": seeker.get("userType"),
             "phoneNumber": seeker.get("phoneNumber", ""),
             "area": seeker.get("area", ""),
+            "images": seeker.get("images", []),
             "party": seeker.get("party", False),
             "smoking": seeker.get("smoking", False),
             "alcohol": seeker.get("alcohol", False),

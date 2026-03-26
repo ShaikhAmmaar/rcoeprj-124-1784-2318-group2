@@ -5,6 +5,7 @@ import {
   StyleSheet,
   FlatList,
   TouchableOpacity,
+  Image,
   TextInput,
   RefreshControl,
   Alert,
@@ -22,6 +23,7 @@ interface Seeker {
   name: string;
   phoneNumber: string;
   area: string;
+  images: string[];
   party: boolean;
   smoking: boolean;
   alcohol: boolean;
@@ -66,11 +68,18 @@ export default function SeekersScreen() {
   }, []);
 
   const renderSeekerCard = ({ item }: { item: Seeker }) => (
-    <View style={styles.card}>
+    <TouchableOpacity 
+      style={styles.card}
+      onPress={() => router.push(`/seeker-details?id=${item.userId}`)}
+    >
       <View style={styles.cardHeader}>
-        <View style={styles.avatar}>
-          <Text style={styles.avatarText}>{item.name.charAt(0).toUpperCase()}</Text>
-        </View>
+        {item.images && item.images.length > 0 ? (
+          <Image source={{ uri: item.images[0] }} style={styles.avatar} />
+        ) : (
+          <View style={styles.avatar}>
+            <Text style={styles.avatarText}>{item.name.charAt(0).toUpperCase()}</Text>
+          </View>
+        )}
         <View style={styles.cardInfo}>
           <Text style={styles.cardName}>{item.name}</Text>
           {item.area && (
@@ -122,7 +131,7 @@ export default function SeekersScreen() {
           <Text style={styles.tagText}>{item.cleaning}</Text>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 
   return (

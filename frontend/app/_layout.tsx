@@ -13,6 +13,7 @@ export default function RootLayout() {
           <Stack.Screen name="profile-setup" />
           <Stack.Screen name="(tabs)" />
           <Stack.Screen name="room-details" />
+          <Stack.Screen name="seeker-details" />
         </Stack>
       </AuthProvider>
     </GestureHandlerRootView>

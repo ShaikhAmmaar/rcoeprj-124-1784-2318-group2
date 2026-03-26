@@ -11,6 +11,7 @@ interface User {
   userType?: string;
   phoneNumber?: string;
   area?: string;
+  images?: string[];
   party?: boolean;
   smoking?: boolean;
   alcohol?: boolean;
