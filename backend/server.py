@@ -23,7 +23,7 @@ client = AsyncIOMotorClient(mongo_url)
 db = client[os.environ['DB_NAME']]
 
 # JWT settings
-SECRET_KEY = os.getenv("SECRET_KEY", "nestmates-secret-key-change-in-production")
+SECRET_KEY = os.environ['SECRET_KEY']
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_DAYS = 30
 
@@ -317,7 +317,8 @@ async def get_seekers(
     if area:
         query["area"] = {"$regex": area, "$options": "i"}
     
-    seekers = await db.users.find(query).to_list(1000)
+    # Fetch seekers without password field (security + performance)
+    seekers = await db.users.find(query, {"password": 0}).to_list(1000)
     
     result = []
     for seeker in seekers:
@@ -427,6 +428,15 @@ async def get_rooms(
     rooms = await db.rooms.find(query).sort("createdAt", -1).to_list(1000)
     
     result = []
+    
+    # Optimize: Batch fetch owners if needed (fix N+1 query problem)
+    if user.get("userType") == "seeker" and rooms:
+        owner_ids = list(set([ObjectId(room["ownerId"]) for room in rooms]))
+        owners = await db.users.find({"_id": {"$in": owner_ids}}).to_list(None)
+        owner_map = {str(owner["_id"]): owner for owner in owners}
+    else:
+        owner_map = {}
+    
     for room in rooms:
         room_data = {
             "roomId": str(room["_id"]),
@@ -441,9 +451,9 @@ async def get_rooms(
             "createdAt": room["createdAt"]
         }
         
-        # Calculate compatibility if user is a seeker
+        # Calculate compatibility if user is a seeker - using pre-fetched owner data
         if user.get("userType") == "seeker":
-            owner = await db.users.find_one({"_id": ObjectId(room["ownerId"])})
+            owner = owner_map.get(room["ownerId"])
             if owner:
                 room_data["compatibility"] = calculate_compatibility(user, owner)
         
