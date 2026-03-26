@@ -205,7 +205,17 @@ backend:
           comment: "✅ JWT authentication middleware now working correctly after fixing FastAPI dependency injection. All protected endpoints properly validate Bearer tokens and extract user information."
 
 frontend:
-  # No frontend testing performed as per instructions
+  - task: "Logout Button Functionality"
+    implemented: true
+    working: "NA"
+    file: "/app/frontend/app/(tabs)/profile.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: true
+    status_history:
+        - working: "NA"
+          agent: "testing"
+          comment: "Testing logout button functionality including user registration, profile setup, logout flow, and re-login verification as requested by user."
 
 metadata:
   created_by: "testing_agent"
@@ -214,7 +224,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Logout Button Functionality"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -222,3 +233,5 @@ test_plan:
 agent_communication:
     - agent: "testing"
       message: "Completed comprehensive backend API testing for NestMates. All 12 test scenarios passed successfully (100% success rate). Fixed critical dependency injection issue in JWT authentication middleware. All core functionality working: user registration/login, profile management, room CRUD operations, compatibility scoring, and filtering. Backend is production-ready."
+    - agent: "testing"
+      message: "Starting frontend logout functionality testing as requested by user. Will test complete flow: user registration, profile setup, logout button functionality with alert confirmation, redirect to auth screen, and re-login verification."
