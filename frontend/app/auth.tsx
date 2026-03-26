@@ -33,10 +33,11 @@ export default function AuthScreen() {
     try {
       if (isLogin) {
         await login(email, password);
+        // Router will be handled by the splash screen after login
       } else {
         await register(email, password, name);
+        router.replace('/user-type');
       }
-      router.replace('/user-type');
     } catch (error: any) {
       Alert.alert('Error', error.message);
     } finally {

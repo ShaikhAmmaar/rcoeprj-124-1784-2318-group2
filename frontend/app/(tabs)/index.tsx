@@ -94,7 +94,7 @@ export default function HomeScreen() {
 
       <View style={styles.cardContent}>
         <View style={styles.cardHeader}>
-          <Text style={styles.cardRent}>${item.rent}/month</Text>
+          <Text style={styles.cardRent}>₹{item.rent}/month</Text>
           {!isOwner && item.compatibility !== undefined && (
             <View style={styles.compatibilityBadge}>
               <Text style={styles.compatibilityText}>{item.compatibility}% Match</Text>

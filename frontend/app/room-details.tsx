@@ -129,7 +129,7 @@ export default function RoomDetailsScreen() {
         {/* Room Info */}
         <View style={styles.content}>
           <View style={styles.header}>
-            <Text style={styles.rent}>${room.rent}/month</Text>
+            <Text style={styles.rent}>₹{room.rent}/month</Text>
             {isSeeker && room.compatibility !== undefined && (
               <View style={styles.compatibilityBadge}>
                 <Ionicons name="heart" size={16} color={Colors.secondary} />

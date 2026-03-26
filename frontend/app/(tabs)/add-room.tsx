@@ -140,7 +140,7 @@ export default function AddRoomScreen() {
       </View>
 
       <View style={styles.section}>
-        <Text style={styles.label}>Monthly Rent ($) *</Text>
+        <Text style={styles.label}>Monthly Rent (₹) *</Text>
         <TextInput
           style={styles.input}
           placeholder="Enter rent amount"
