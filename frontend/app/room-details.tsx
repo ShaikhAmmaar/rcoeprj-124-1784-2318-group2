@@ -168,29 +168,6 @@ export default function RoomDetailsScreen() {
               <Text style={styles.rules}>{room.rules}</Text>
             </View>
           )}
-
-          {isSeeker && room.compatibility !== undefined && (
-            <View style={styles.matchSection}>
-              <Text style={styles.sectionTitle}>Compatibility Analysis</Text>
-              <View style={styles.compatibilityBar}>
-                <View
-                  style={[
-                    styles.compatibilityFill,
-                    { width: `${room.compatibility}%` },
-                  ]}
-                />
-              </View>
-              <Text style={styles.compatibilityDescription}>
-                {room.compatibility >= 80
-                  ? 'Excellent match! Your lifestyles are very compatible.'
-                  : room.compatibility >= 60
-                  ? 'Good match! You share several preferences.'
-                  : room.compatibility >= 40
-                  ? 'Moderate match. Some differences in lifestyle.'
-                  : 'Low match. Consider if this works for you.'}
-              </Text>
-            </View>
-          )}
         </View>
       </ScrollView>
     </View>
@@ -331,33 +308,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: Colors.textPrimary,
     lineHeight: 24,
-  },
-  matchSection: {
-    backgroundColor: Colors.secondary,
-    borderRadius: 16,
-    padding: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  compatibilityBar: {
-    height: 12,
-    backgroundColor: Colors.border,
-    borderRadius: 6,
-    overflow: 'hidden',
-    marginBottom: 12,
-  },
-  compatibilityFill: {
-    height: '100%',
-    backgroundColor: Colors.success,
-    borderRadius: 6,
-  },
-  compatibilityDescription: {
-    fontSize: 14,
-    color: Colors.textSecondary,
-    lineHeight: 20,
   },
   button: {
     backgroundColor: Colors.primary,

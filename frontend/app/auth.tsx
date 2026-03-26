@@ -32,14 +32,40 @@ export default function AuthScreen() {
     setLoading(true);
     try {
       if (isLogin) {
+        // Try to login
         await login(email, password);
-        // Router will be handled by the splash screen after login
+        // If successful, navigation is handled by splash screen
       } else {
+        // Register new user
         await register(email, password, name);
-        router.replace('/user-type');
+        // After registration, go to user type selection
       }
     } catch (error: any) {
-      Alert.alert('Error', error.message);
+      const errorMessage = error.message || 'An error occurred';
+      
+      // Check if error is due to invalid credentials (email not found or wrong password)
+      if (isLogin && errorMessage.includes('Invalid email or password')) {
+        // Check if it's specifically an email issue by attempting to see the error
+        Alert.alert(
+          'Account Not Found',
+          'This email is not registered. Would you like to sign up?',
+          [
+            {
+              text: 'Cancel',
+              style: 'cancel',
+            },
+            {
+              text: 'Sign Up',
+              onPress: () => {
+                setIsLogin(false);
+                setPassword(''); // Clear password for signup
+              },
+            },
+          ]
+        );
+      } else {
+        Alert.alert('Error', errorMessage);
+      }
     } finally {
       setLoading(false);
     }
