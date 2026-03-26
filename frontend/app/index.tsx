@@ -10,15 +10,14 @@ export default function SplashScreen() {
 
   useEffect(() => {
     if (!loading) {
-      setTimeout(() => {
-        if (!user) {
-          router.replace('/auth');
-        } else if (!user.userType) {
-          router.replace('/user-type');
-        } else {
-          router.replace('/(tabs)');
-        }
-      }, 1500);
+      // No delay, direct navigation
+      if (!user) {
+        router.replace('/auth');
+      } else if (!user.userType) {
+        router.replace('/user-type');
+      } else {
+        router.replace('/(tabs)');
+      }
     }
   }, [user, loading]);
 

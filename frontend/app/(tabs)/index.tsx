@@ -137,7 +137,7 @@ export default function HomeScreen() {
           <View style={styles.rentRow}>
             <TextInput
               style={styles.rentInput}
-              placeholder="Min Rent"
+              placeholder="Min Rent (₹)"
               value={minRent}
               onChangeText={setMinRent}
               keyboardType="numeric"
@@ -145,15 +145,17 @@ export default function HomeScreen() {
             <Text style={styles.rentSeparator}>-</Text>
             <TextInput
               style={styles.rentInput}
-              placeholder="Max Rent"
+              placeholder="Max Rent (₹)"
               value={maxRent}
               onChangeText={setMaxRent}
               keyboardType="numeric"
             />
-            <TouchableOpacity style={styles.filterButton} onPress={handleSearch}>
-              <Ionicons name="filter" size={20} color={Colors.secondary} />
-            </TouchableOpacity>
           </View>
+
+          <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
+            <Ionicons name="search" size={20} color={Colors.secondary} />
+            <Text style={styles.searchButtonText}>Search Rooms</Text>
+          </TouchableOpacity>
         </View>
       )}
 
@@ -222,10 +224,20 @@ const styles = StyleSheet.create({
     color: Colors.textSecondary,
     fontSize: 18,
   },
-  filterButton: {
+  searchButton: {
+    flexDirection: 'row',
     backgroundColor: Colors.primary,
     borderRadius: 12,
-    padding: 12,
+    padding: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    marginTop: 12,
+  },
+  searchButtonText: {
+    color: Colors.secondary,
+    fontSize: 16,
+    fontWeight: '600',
   },
   list: {
     padding: 16,
